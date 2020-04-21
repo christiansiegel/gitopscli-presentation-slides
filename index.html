@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>GitOps CLI</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <style type="text/css">
+      @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+      @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+      @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+      body { font-family: 'Droid Serif'; }
+      h1, h2, h3 {
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: normal;
+      }
+      .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+    </style>
+  </head>
+  <body>
+    <textarea id="source">
+
+class: center, middle
+
+# [GitOps CLI](https://baloise.github.io/gitopscli/)
+
+[Christian Siegel](https://github.com/christiansiegel)
+
+2020-04-23
+---
+
+# Agenda
+
+1. Why did we create it?
+2. What can it be used for?
+3. How does it work?
+4. How can I contribute?
+
+---
+
+# Why did we create it? 
+
+## Initial Question
+
+How do we update YAML files in GitOps repositories?
+
+```yaml
+image:
+  repository: registry.baloise.dev/example/nginx-sample
+  tag: 'v1.0.0' # we want to update this value from e.g. jenkins
+```
+
+---
+
+# Why did we create it? 
+
+## Requirements
+
+- Simple API
+- Keep YAML comments
+- Possibility to perform changes on branch with PR
+- Leave behind a clean commit history
+
+---
+
+# Why did we create it? 
+
+## Technology
+
+### Jenkins Library?
+
+Major Issue: no YAML library that keeps comments
+
+### Python + Docker! ♡
+
+- Powerful YAML library: [ruamel.yaml](https://yaml.readthedocs.io/)
+- Simple CLI creation: [arparse](https://docs.python.org/3/library/argparse.html)
+- [BitBucket](https://github.com/atlassian-api/atlassian-python-api) and [Github](https://github.com/PyGithub/PyGithub) API libraries
+- Only docker required
+
+---
+
+# Why did we create it? 
+
+## First Version
+
+```bash
+gitopscli deploy \
+  --git-provider-url https://bitbucket.baloise.dev \
+  --username $GIT_USERNAME \
+  --password $GIT_PASSWORD \
+  --git-user "GitOpsCLI" \
+  --git-email "gitopscli@baloise.dev" \
+  --organisation "DPL" \
+  --repository-name "incubator-non-prod" \
+  --file example/values.yaml \
+  --values "{image.tag: v2.0.0}" \
+  --branch release \
+  --create-pr \
+  --auto-merge
+```
+
+```yaml
+image:
+  repository: registry.baloise.dev/example/nginx-sample
+  tag: 'v2.0.0' # we want to update this value from e.g. jenkins
+```
+
+---
+
+# What can it be used for?
+
+- Update YAML values in config repository to e.g. deploy an application
+  - [deploy command](https://baloise.github.io/gitopscli/commands/deploy/)
+  - [example](https://github.com/christiansiegel/okd4-deployment-configuration/pull/16)
+- Update root config repository with all apps from child config repositories
+  - [sync-apps command](https://baloise.github.io/gitopscli/commands/ync-apps/)
+- Create and delete preview environments in the config repository for a pull request in an app repository
+  - [create-preview command](https://baloise.github.io/gitopscli/commands/create-preview/)
+  - [delete-preview command](https://baloise.github.io/gitopscli/commands/create-preview/)
+  - [example](https://github.com/baloise-incubator/gitops-nginx-demo/pull/29)
+- Add pull request comments
+  - [add-pr-comment command](https://baloise.github.io/gitopscli/commands/add-pr-comment/)
+  - [example](https://github.com/baloise-incubator/gitops-nginx-demo/pull/29)
+
+---
+
+# How does it work?
+
+TODO
+
+---
+
+# How can I contribute?
+
+- [Contribution Guidelines](https://baloise.github.io/gitopscli/contributing/)
+- [Issues](https://github.com/baloise/gitopscli/issues)
+- Talk to [Nikolas](https://github.com/niiku), [Joachim](https://github.com/joachimprinzbach) or [me](https://github.com/christiansiegel).
+
+    </textarea>
+    <script src="https://remarkjs.com/downloads/remark-latest.min.js">
+    </script>
+    <script>
+      var slideshow = remark.create();
+    </script>
+  </body>
+</html>
