@@ -1,2 +1,2 @@
 # gitopscli-presentation-slides
-Slides for short presentation of https://baloise.github.io/gitopscli
+[Slides](https://christiansiegel.github.io/gitopscli-presentation-slides/) for short presentation of [baloise/gitopscli](https://baloise.github.io/gitopscli).
